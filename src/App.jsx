@@ -10,22 +10,13 @@ import Updates from "./Component/Updates";
 import AddUpdates from "./Component/AddUpdates";
 import "./App.css";
 import Pages from "./Component/Pages";
+import InPage from "./Component/InPage";
+import Routess from "./Routes/Routess";
 
 export default function App() {
   return (
     <>
-      <div className="bg-gray-300 ">
-        <Nav />
-        <Pages />
-        {/* <Chat /> */}
-        {/* <Login /> */}
-        {/* <Updates />
-
-<Signin />
-       
-        <Profile />
-        <AddContacts /> */}
-      </div>
+      <Routess />
     </>
   );
 }
