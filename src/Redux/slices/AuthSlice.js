@@ -3,16 +3,15 @@ import axios from "axios";
 
 
 
-export const login = createAsyncThunk('/login/user', async (data) => {
+export const signupForm = createAsyncThunk('/signup/user', async (data) => {
 
 
     try {
-        let { name, password } = data;
+        let { name, email, password, mobile, bio, age } = data;
 
-        console.log(name, password, data);
-        const res = await axios.post('/api/AdminLogin/', {
-            adminname: name,
-            adminpassword: password
+        console.log("data is ", data);
+        const res = await axios.post('/api/v1/users/signup', {
+            name, email, password, mobile, bio, age
         }, {
             withCredentials: true
         })
@@ -25,7 +24,34 @@ export const login = createAsyncThunk('/login/user', async (data) => {
     } catch (error) {
 
         console.log(error);
+        return error.response;
+    }
 
+
+})
+
+export const loginForm = createAsyncThunk('/login/user', async (data) => {
+
+
+    try {
+        let { email, password } = data;
+
+        console.log("data is ", data);
+        const res = await axios.post('/api/v1/users/login', {
+            email, password
+        }, {
+            withCredentials: true
+        })
+        if (res) {
+            console.log(res);
+            return res
+
+
+        }
+    } catch (error) {
+
+        console.log(error);
+        return error.response;
     }
 
 
@@ -39,14 +65,19 @@ const authSlice = createSlice({
     name: 'Auth',
     initialState,
     reducers: {
-        logout: (state, action) => {
-            state.isLoggedIn = false;
-        }
+
+
     },
     extraReducers: (builder) => {
-        builder.addCase(login.fulfilled, (state, action) => {
-            localStorage.setItem("isLoggedIn", true)
-            state.isLoggedIn = true;
+        builder.addCase(signupForm.fulfilled, (state, action) => {
+            if (action.payload.data.status) {
+                console.log(action);
+                localStorage.setItem("isLoggedIn", true)
+                localStorage.setItem("data", action?.payload?.data?.user)
+                state.isLoggedIn = true;
+                state.data = action?.payload?.data?.user;
+                console.log(action);
+            }
 
 
         })

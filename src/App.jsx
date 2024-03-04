@@ -12,10 +12,12 @@ import "./App.css";
 import Pages from "./Component/Pages";
 import InPage from "./Component/InPage";
 import Routess from "./Routes/Routess";
+import { AlertBox } from "./Component/AlertBox";
 
 export default function App() {
   return (
     <>
+      <AlertBox />
       <Routess />
     </>
   );
