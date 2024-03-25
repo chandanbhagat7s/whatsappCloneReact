@@ -14,7 +14,10 @@ export const AlertBox = () => {
 
   return (
     <>
-      <div className="absolute top-5 sticky mx-12 animate-bounce z-[100] ">
+      <div
+        className="absolute top-5 fixed mx-12 animate-bounce  "
+        style={{ zIndex: 1000000 }}
+      >
         {error.status == "" && <></>}
         {error.status == "success" && (
           <>

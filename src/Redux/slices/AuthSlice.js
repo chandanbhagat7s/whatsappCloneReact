@@ -59,7 +59,7 @@ export const loginForm = createAsyncThunk('/login/user', async (data) => {
 
 const initialState = {
     data: localStorage.getItem("data") || '',
-    isLoggedIn: localStorage.getItem("isLoggedIn") || false,
+    isLoggedIn: localStorage.getItem("isLoggedIn") || 'false',
 }
 const authSlice = createSlice({
     name: 'Auth',
@@ -72,8 +72,19 @@ const authSlice = createSlice({
         builder.addCase(signupForm.fulfilled, (state, action) => {
             if (action.payload.data.status) {
                 console.log(action);
-                localStorage.setItem("isLoggedIn", true)
-                localStorage.setItem("data", action?.payload?.data?.user)
+                localStorage.setItem("isLoggedIn", JSON.stringify(true))
+                localStorage.setItem("data", JSON.stringify(action?.payload?.data?.user))
+                state.isLoggedIn = true;
+                state.data = action?.payload?.data?.user;
+                console.log(action);
+            }
+
+
+        }).addCase(loginForm.fulfilled, (state, action) => {
+            if (action.payload.data.status) {
+                console.log(action);
+                localStorage.setItem("isLoggedIn", JSON.stringify(true))
+                localStorage.setItem("data", JSON.stringify(action?.payload?.data?.user))
                 state.isLoggedIn = true;
                 state.data = action?.payload?.data?.user;
                 console.log(action);

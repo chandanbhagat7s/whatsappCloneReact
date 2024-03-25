@@ -10,10 +10,10 @@ import { MdOutlineScheduleSend } from "react-icons/md";
 export default function Chat() {
   return (
     <div
-      className="min-h-screen w-[100vw]  m-auto bg-gray-100  md:p-4 flex justify-center items-center"
-      style={{ marginTop: "-8vh" }}
+      className="min-h-screen w-[100vw]  m-auto bg-gray-100  md:p-2 flex justify-center items-start"
+      // style={{ marginTop: "-8vh" }}
     >
-      <div className="bg-white rounded-lg h-[80vh] shadow-lg overflow-hidden flex w-full max-w-6xl">
+      <div className="bg-white rounded-lg h-[85vh] shadow-lg overflow-hidden flex w-full max-w-6xl">
         <div className="hidden lg:block w-4/12 bg-blue-400 p-4 overflow-y-auto">
           <div className="flex items-center px-4 mb-5">
             <Input

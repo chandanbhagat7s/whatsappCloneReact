@@ -20,14 +20,13 @@ export default function Login() {
   }
   async function handleSubmit() {
     if (!inputData.email || !inputData.password) {
-      console.log("came");
       dispatch(warning({ message: "please enter email and password" }));
       return;
     }
     const response = await dispatch(loginForm(inputData));
 
     if (response.payload?.data?.status) {
-      dispatch(success("Your are Logged in Successfully"));
+      dispatch(success({ message: "Your are Logged in Successfully" }));
       nevigate("/chat");
     } else {
       dispatch(

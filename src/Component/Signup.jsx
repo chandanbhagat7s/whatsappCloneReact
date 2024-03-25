@@ -53,7 +53,7 @@ export default function Signin() {
     const response = await dispatch(signupForm({ ...inputData }));
     console.log(response);
     if (response.payload?.data?.status) {
-      dispatch(success("Your are Logged in Successfully"));
+      dispatch(success({ message: "Your are Logged in Successfully" }));
       nevigate("/chat");
     } else {
       dispatch(
@@ -64,7 +64,7 @@ export default function Signin() {
   }
   return (
     <div
-      className="min-h-screen w-[100vw]  m-auto bg-sky-100    flex justify-center items-center pb-44 pt-12 lg:pt-12 lg:pb-44"
+      className="min-h-screen w-[99vw]  m-auto bg-sky-100  flex justify-center items-center pb-44 pt-12 lg:pt-12 lg:pb-44"
       style={{ marginTop: "-8vh" }}
     >
       <div className="w-full lg:w-2/3 rounded-lg bg-sky-200 p-12">

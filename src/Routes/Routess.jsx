@@ -3,9 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import MainOut from "../Pages/MainOut";
 import Login from "../Component/Login";
 import Chat from "../Component/Chat";
-import Profile from "../Component/Profile";
 import Signin from "../Component/Signup";
 import Authentication from "../Component/Autherticater";
+import Requests from "../Component/Requests";
 
 export default function Routess() {
   return (
@@ -16,10 +16,17 @@ export default function Routess() {
           element={
             <>
               <MainOut>
-                {/* <Login /> */}
+                <Signin />
+              </MainOut>
+            </>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <>
+              <MainOut>
                 <Login />
-                {/* <Chat /> */}
-                {/* <Profile /> */}
               </MainOut>
             </>
           }
@@ -30,6 +37,14 @@ export default function Routess() {
             element={
               <MainOut>
                 <Chat />
+              </MainOut>
+            }
+          ></Route>
+          <Route
+            path="/requests"
+            element={
+              <MainOut>
+                <Requests />
               </MainOut>
             }
           ></Route>
