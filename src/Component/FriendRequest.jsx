@@ -11,13 +11,11 @@ export default function FriendRequest() {
         withCredentials: true,
       });
       if (res) {
-        console.log(res);
         if (res.data.status) {
           setData([...res.data.remaining_users]);
         }
       }
     } catch (error) {
-      console.log(error);
       return error.response;
     }
   }

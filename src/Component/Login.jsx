@@ -24,15 +24,17 @@ export default function Login() {
       return;
     }
     const response = await dispatch(loginForm(inputData));
+    console.log("response is ", response);
 
     if (response.payload?.data?.status) {
-      dispatch(success({ message: "Your are Logged in Successfully" }));
       nevigate("/chat");
+      dispatch(success({ message: "Your are Logged in Successfully" }));
     } else {
       dispatch(
         error({ message: response.payload.data.msg || "something went wrong" })
       );
     }
+    console.log("running");
     return;
   }
 

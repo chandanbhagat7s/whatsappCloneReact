@@ -16,12 +16,17 @@ import { AlertBox } from "./Component/AlertBox";
 import { useDispatch, useSelector } from "react-redux";
 import { connectSocket, socket } from "./socket";
 import { success } from "./Redux/slices/ErrorSlice";
+import { loading } from "./Redux/slices/RequestSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function App() {
+  const nevigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoggedIn, data } = useSelector((state) => state.auth);
-  console.log(isLoggedIn);
-  console.log(data);
+
+  console.log(JSON.parse(data), JSON.parse(isLoggedIn));
+
+  const opneduser = useSelector((state) => state.friends.openedUser);
 
   // socket functionality once the user is loggedin
   useEffect(() => {
@@ -32,25 +37,21 @@ export default function App() {
     //   JSON.parse(isLoggedIn)
     // );
     if (JSON.parse(isLoggedIn)) {
-      console.log("called for ", data);
       // window.onload = function () {
 
       // };
 
-      console.log("called for ", data);
       if (!window.location.hash) {
+        nevigate("/chat");
         window.location = window.location + "#loaded";
         window.location.reload();
       }
       // window.reload();
       if (!socket) {
-        console.log("calling");
         connectSocket(JSON.parse(data)._id);
       }
-      console.log(socket);
 
       if (socket) {
-        console.log(socket);
         socket.on("new_friend_request", (data) => {
           dispatch(success({ message: data.message }));
         });
@@ -62,7 +63,24 @@ export default function App() {
         socket.on("request_accepted", (data) => {
           dispatch(success({ message: data.message }));
         });
+
+        socket.on("reseved_message", (d) => {
+          dispatch(success({ message: d.message }));
+
+          // if (d.by == opneduser) {
+          //   socket.emit("mark_all_seen", {
+          //     resever: d.by,
+          //     sender: JSON.parse(data)._id,
+          //   });
+          //   dispatch(loading());
+          // }
+        });
+        socket.on("seen_message", () => {
+          dispatch(loading());
+        });
       }
+      // console.log("ENDED");
+      // dispatch(loading());
     }
 
     // things that we need to do when this componetn will unmount

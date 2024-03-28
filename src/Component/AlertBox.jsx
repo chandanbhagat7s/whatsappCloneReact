@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export const AlertBox = () => {
   const error = useSelector((state) => state.error);
-  console.log(error);
+
   const dispatch = useDispatch((state) => state.error);
 
   setTimeout(() => {

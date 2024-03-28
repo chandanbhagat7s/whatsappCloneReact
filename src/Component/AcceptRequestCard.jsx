@@ -6,12 +6,8 @@ import { IoCheckmarkDoneSharp } from "react-icons/io5";
 import { IoPersonRemoveOutline } from "react-icons/io5";
 
 export default function AcceptRequestCard({ data }) {
-  console.log(data);
-
   let ownUser = useSelector((state) => state.auth.data);
-  console.log(ownUser);
 
-  console.log(ownUser);
   const sendFriendRequest = () => {
     // console.log("clicked");
     socket.emit("accept_request", {

@@ -5,6 +5,7 @@ import { error, success, warning } from "../Redux/slices/ErrorSlice";
 import axios from "axios";
 import { signupForm } from "../Redux/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
+import { loading } from "../Redux/slices/RequestSlice";
 
 export default function Signin() {
   const nevigate = useNavigate();
@@ -28,7 +29,6 @@ export default function Signin() {
     setSeen(seen ? false : true);
   }
   async function handleSubmit() {
-    console.log(inputData);
     if (
       !inputData.email ||
       !inputData.password ||
@@ -51,10 +51,10 @@ export default function Signin() {
     }
 
     const response = await dispatch(signupForm({ ...inputData }));
-    console.log(response);
     if (response.payload?.data?.status) {
       dispatch(success({ message: "Your are Logged in Successfully" }));
       nevigate("/chat");
+      dispatch(loading());
     } else {
       dispatch(
         error({ message: response.payload.data.msg || "something went wrong" })

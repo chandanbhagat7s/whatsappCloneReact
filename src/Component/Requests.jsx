@@ -4,15 +4,9 @@ import { socket } from "../socket";
 import { useSelector } from "react-redux";
 
 export default function Requests({ data }) {
-  console.log(data);
-
   let ownUser = useSelector((state) => state.auth.data);
-  console.log(ownUser);
 
-  console.log(ownUser);
   const sendFriendRequest = () => {
-    console.log("clicked");
-
     socket.emit("friend_request", {
       to: data._id,
       from: JSON.parse(ownUser)._id,

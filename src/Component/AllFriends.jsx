@@ -3,25 +3,16 @@ import Requests from "./Requests";
 import axios from "axios";
 import AcceptRequestCard from "./AcceptRequestCard";
 import FriendsCard from "./FriendsCard";
+import { useDispatch, useSelector } from "react-redux";
+import { sendMessage } from "../Redux/slices/RequestSlice";
 
 export default function AllFriends() {
   const [data, setData] = useState([]);
+  let friends = useSelector((state) => state.friends);
+  const dispatch = useDispatch();
 
   async function getData() {
-    try {
-      const res = await axios.get("/api/v1/users/getFriendList", {
-        withCredentials: true,
-      });
-      if (res) {
-        console.log(res);
-        if (res.data.status) {
-          setData([...res.data.data]);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-      return error.response;
-    }
+    dispatch(sendMessage());
   }
 
   useEffect(() => {
@@ -29,8 +20,8 @@ export default function AllFriends() {
   }, []);
   return (
     <>
-      {setData.length > 0 &&
-        data.map((el, i) => {
+      {friends.friends.length > 0 &&
+        friends.friends.map((el, i) => {
           return <FriendsCard data={el} key={i} />;
         })}
     </>

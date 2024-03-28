@@ -12,13 +12,11 @@ export default function AllRequests() {
         withCredentials: true,
       });
       if (res) {
-        console.log(res);
         if (res.data.status) {
           setData([...res.data.data]);
         }
       }
     } catch (error) {
-      console.log(error);
       return error.response;
     }
   }
@@ -28,10 +26,16 @@ export default function AllRequests() {
   }, []);
   return (
     <>
-      {setData.length > 0 &&
+      {console.log(data.length)}
+      {data.length > 0 ? (
         data.map((el, i) => {
           return <AcceptRequestCard data={el} key={i} />;
-        })}
+        })
+      ) : (
+        <>
+          <div className="px-auto py-3">No friend requests</div>
+        </>
+      )}
     </>
   );
 }

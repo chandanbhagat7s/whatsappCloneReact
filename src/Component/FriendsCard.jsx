@@ -1,23 +1,28 @@
 import React from "react";
 import { LiaUserFriendsSolid } from "react-icons/lia";
 import { socket } from "../socket";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IoChatbubblesOutline } from "react-icons/io5";
+import { closeRequestDialog } from "../Redux/slices/Default";
+import {
+  loading,
+  openChatBox,
+  setOpenUser,
+} from "../Redux/slices/RequestSlice";
 
 export default function FriendsCard({ data }) {
-  console.log(data);
-
   let ownUser = useSelector((state) => state.auth.data);
-  console.log(ownUser);
+  const dispatch = useDispatch();
 
-  console.log(ownUser);
-  const sendFriendRequest = () => {
-    console.log("clicked");
+  const sendHiiMessage = () => {
+    socket.emit("create_new_convertion", {
+      reciver: data._id,
+      sender: JSON.parse(ownUser)._id,
+    });
+    dispatch(closeRequestDialog());
+    dispatch(setOpenUser({ _id: data._id }));
 
-    // socket.emit("friend_request", {
-    //   to: data._id,
-    //   from: JSON.parse(ownUser)._id,
-    // });
+    dispatch(loading());
   };
   return (
     <>
@@ -41,10 +46,10 @@ export default function FriendsCard({ data }) {
           <div className="flex space-x-2 text-base font-semibold text-gray-900 ">
             <button
               className="bg-green-700 text-white py-2 px-4 rounded-lg"
-              onClick={sendFriendRequest}
+              onClick={sendHiiMessage}
             >
               <IoChatbubblesOutline />
-              Chat
+              Say hii
             </button>
           </div>
         </div>
