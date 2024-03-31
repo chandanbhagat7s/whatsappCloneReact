@@ -24,7 +24,6 @@ export default function Login() {
       return;
     }
     const response = await dispatch(loginForm(inputData));
-    console.log("response is ", response);
 
     if (response.payload?.data?.status) {
       nevigate("/chat");
@@ -34,7 +33,6 @@ export default function Login() {
         error({ message: response.payload.data.msg || "something went wrong" })
       );
     }
-    console.log("running");
     return;
   }
 

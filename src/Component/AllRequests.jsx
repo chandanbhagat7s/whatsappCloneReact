@@ -26,7 +26,6 @@ export default function AllRequests() {
   }, []);
   return (
     <>
-      {console.log(data.length)}
       {data.length > 0 ? (
         data.map((el, i) => {
           return <AcceptRequestCard data={el} key={i} />;

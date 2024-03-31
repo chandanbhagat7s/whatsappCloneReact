@@ -8,10 +8,29 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 import { MdOutlineScheduleSend } from "react-icons/md";
 import ChatList from "./ChatList";
 import Chatting from "./Chatting";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import Login from "./Login";
+import AddGroupForm from "./AddGroupForm";
+import { loading } from "../Redux/slices/RequestSlice";
+import GroupDispaly from "./GroupDispaly";
+import { success } from "../Redux/slices/ErrorSlice";
+import { socket } from "../socket";
 
 export default function Chat() {
+  let opnedBy = useSelector((state) => state.friends.openedUser);
   const open = useSelector((state) => state.friends.open);
+  let load = useSelector((state) => state.friends.load);
+  let groupLoading = useSelector((state) => state.friends.loadGroup);
+  const [tab, setTab] = useState(1);
+  const dispatch = useDispatch();
+
+  let addGroupPage = useSelector((state) => state.friends.addGroupPage);
+  let opnedGroup = useSelector((state) => state.group.opnedGroup);
+
+  let auth = useSelector((state) => state.auth.data);
+
+  useEffect(() => {}, [load, groupLoading]);
 
   return (
     <div
@@ -19,9 +38,16 @@ export default function Chat() {
       // style={{ marginTop: "-8vh" }}
     >
       <div className="bg-white rounded-lg h-[85vh] shadow-lg overflow-hidden flex w-full max-w-6xl">
-        <ChatList />
-        {open ? (
+        <ChatList tab={tab} setTab={setTab} />
+        {}
+        {open && !addGroupPage ? (
           <Chatting />
+        ) : addGroupPage || opnedGroup ? (
+          opnedGroup ? (
+            <GroupDispaly />
+          ) : (
+            <AddGroupForm />
+          )
         ) : (
           <>
             <div className="w-full lg:w-8/12 flex flex-col bg-blue-200 text-white p-3">
@@ -44,25 +70,5 @@ export default function Chat() {
         )}
       </div>
     </div>
-  );
-}
-
-function SearchIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
   );
 }

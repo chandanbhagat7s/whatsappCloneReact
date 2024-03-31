@@ -1,6 +1,6 @@
 import { Avatar, Input } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { CiSearch } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,21 +8,25 @@ import {
   getAllCommunication,
   loading,
   openChatBox,
+  removePage,
   setOpenUser,
 } from "../Redux/slices/RequestSlice";
 import { socket } from "../socket";
+import GroupComponent from "./GroupComponent";
+import { success } from "../Redux/slices/ErrorSlice";
 
-export default function ChatList() {
+export default function ChatList({ tab, setTab }) {
   //   const [friends, setFriends] = useState([]);
   let auth = useSelector((state) => state.auth.data);
   let opnedfor = useSelector((state) => state.friends.openedUser);
   let load = useSelector((state) => state.friends.load);
   let friends = useSelector((state) => state.friends.chatListUsers);
 
+  let unread = 0;
+
   const dispatch = useDispatch();
 
   const displayChats = (id) => {
-    console.log("id is ", id);
     dispatch(setOpenUser({ _id: id }));
     dispatch(openChatBox());
     dispatch(loading());
@@ -31,12 +35,31 @@ export default function ChatList() {
       sender: JSON.parse(auth)._id,
     });
   };
+  if (socket) {
+    socket.on("seen_message", () => {
+      dispatch(loading());
+    });
+    socket.on("reseved_message", (d) => {
+      dispatch(success({ message: d.message }));
+      dispatch(loading());
+      // dispatch(setNewMessage());
+
+      // if (d.by == opneduser) {
+      //   socket.emit("mark_all_seen", {
+      //     resever: d.by,
+      //     sender: JSON.parse(data)._id,
+      //   });
+      //   dispatch(loading());
+      // }
+    });
+  }
 
   const data = async () => {
     await dispatch(getAllCommunication());
   };
   useEffect(() => {
     data();
+    // console.log("friends arr is ", friends);
   }, [load]);
 
   return (
@@ -49,7 +72,30 @@ export default function ChatList() {
           />
           <CiSearch className="text-2xl text-white font-extrabold ml-2" />
         </div>
-        {friends.length > 0 &&
+        <div className=" bg-blue-400 flex justify-around mb-2">
+          <div
+            onClick={() => {
+              setTab(1);
+              dispatch(removePage());
+              dispatch(loading());
+            }}
+            className={`rounded-full px-3 py-2  text-white font-bold cursor-pointer   w-[75%] text-center ${
+              tab == 1 ? "bg-black text" : "bg-blue-600 hover:bg-blue-500"
+            }`}
+          >
+            Chats
+          </div>
+          <div
+            onClick={() => setTab(2)}
+            className={`rounded-full px-3 py-2   cursor-pointer text-white font-bold w-[75%] text-center ${
+              tab == 2 ? "bg-black text" : "bg-blue-600 hover:bg-blue-500"
+            }`}
+          >
+            Groups
+          </div>
+        </div>
+        {tab == 1 &&
+          friends.length > 0 &&
           friends.map((el, i) => {
             return (
               <>
@@ -80,8 +126,18 @@ export default function ChatList() {
                           ? el.user2.userName
                           : el.user1.userName}
                       </div>
-                      <div className="text-sm text-gray-600">
-                        {el.chats.msg[el.chats.msg.length - 1].message}
+                      <div className="text-sm text-gray-600 flex justify-between">
+                        {el.chats.msg[el.chats.msg.length - 1].message}{" "}
+                        {unread ? (
+                          <>
+                            {" "}
+                            <div className="bg-blue-800 text-white font-bold rounded-full p-1">
+                              {unread}
+                            </div>{" "}
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                     <div className="ml-auto text-sm text-gray-600"></div>
@@ -91,6 +147,11 @@ export default function ChatList() {
               </>
             );
           })}
+        {tab == 2 && (
+          <>
+            <GroupComponent />
+          </>
+        )}
       </div>
     </>
   );

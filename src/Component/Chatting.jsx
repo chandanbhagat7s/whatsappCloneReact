@@ -14,9 +14,11 @@ import { MdVerified } from "react-icons/md";
 import { GoVerified } from "react-icons/go";
 
 import { FaCheck } from "react-icons/fa";
+import { success } from "../Redux/slices/ErrorSlice";
 
 export default function Chatting() {
   let auth = useSelector((state) => state.auth.data);
+  const newMessage = useSelector((state) => state.friends.newMessage);
 
   let opnedBy = useSelector((state) => state.friends.openedUser);
   let friends = useSelector((state) => state.friends.chatListUsers);
@@ -58,18 +60,20 @@ export default function Chatting() {
         sender: JSON.parse(auth)._id,
         communication: display[0].chats._id,
       });
+
       dispatch(loading());
       setInput("");
     }
   };
 
+  // console.log("***** came into useEFFE");
+  // dispatch(loading());
+
   useEffect(() => {
-    // console.log("***** came into useEFFE");
     socket.emit("mark_all_seen", {
       resever: opnedBy,
       sender: JSON.parse(auth)._id,
     });
-    // dispatch(loading());
   }, [load]);
   return (
     <>

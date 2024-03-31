@@ -37,6 +37,23 @@ export const getAllCommunication = createAsyncThunk('/AllMessage/user', async ()
 })
 
 
+export const getAllCommunicationforGroup = createAsyncThunk('/AllMessage/group', async () => {
+
+    try {
+        const res = await axios.post("/api/v1/users/createGroup", {
+            withCredentials: true,
+        });
+        if (res.data.status) {
+            return res.data.data
+        }
+    } catch (error) {
+        return []
+    }
+
+
+})
+
+
 
 
 
@@ -74,7 +91,10 @@ const initialState = {
     open: false,
     chatListUsers: [],
     openedUser: '',
-    load: false
+    load: false,
+    newMessage: Date.now(),
+    group: [],
+    addGroupPage: false
 }
 const friendsSlice = createSlice({
     name: 'Friends',
@@ -84,8 +104,17 @@ const friendsSlice = createSlice({
         openChatBox: (state, action) => {
             state.open = true
         },
+        addGroupPageDisplay: (state, action) => {
+            state.addGroupPage = true
+        },
+        removePage: (state, action) => {
+            state.addGroupPage = false
+        },
         loading: (state, action) => {
             state.load = state.load ? false : true
+        },
+        setNewMessage: (state, action) => {
+            state.newMessage = Date.now()
         },
         setOpenUser: (state, action) => {
             state.openedUser = action.payload._id
@@ -113,7 +142,7 @@ const friendsSlice = createSlice({
 
 
 
-export const { openChatBox, setOpenUser, loading } = friendsSlice.actions
+export const { openChatBox, setOpenUser, loading, setNewMessage, addGroupPageDisplay, removePage } = friendsSlice.actions
 
 
 export default friendsSlice.reducer
