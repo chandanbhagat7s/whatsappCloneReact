@@ -22,6 +22,7 @@ export default function GroupComponent() {
     dispatch(setLoad());
   }
   function displayGroup(id) {
+    console.log("SETTING THE ID");
     dispatch(setOpenGroupId({ _id: id }));
     dispatch(setLoad());
   }
@@ -30,6 +31,7 @@ export default function GroupComponent() {
     dispatch(getInfoGroup());
   }
   useEffect(() => {
+    console.log("RUNNING");
     getData();
   }, [groupLoad]);
 
@@ -55,13 +57,16 @@ export default function GroupComponent() {
       >
         {allGroups &&
           allGroups.length > 0 &&
-          allGroups.map((el, i) => {
+          allGroups.map((el, i) => { 
             return (
               <Fragment key={i}>
                 <div
                   className={`flex items-center px-4 py-2  hover:text-blue-800 rounded cursor-pointer 
-                    hover:bg-blue-300 hover:text-blue-800`}
+                    hover:bg-blue-300 hover:text-blue-800 ${
+                      id == el._id && "bg-blue-300"
+                    }`}
                   onClick={() => {
+                    console.log("DISPLAYING GROUP", el._id);
                     displayGroup(el._id);
                   }}
                 >

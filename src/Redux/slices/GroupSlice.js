@@ -65,10 +65,13 @@ export const getInfoGroup = createAsyncThunk('/group/getAllGroupsDetails', async
 export const getAllMessagesGroup = createAsyncThunk('/group/getAllGroupsMessages', async (id) => {
 
     try {
+        console.log("REQUESTING", id);
         const res = await axios.get(`/api/v1/users/getAllCommunicationGroup/${id}`, {
             withCredentials: true,
         });
+        console.log("RESSS", res);
         if (res.data.status) {
+            console.log("res is ", res);
             return res.data
         }
     } catch (error) {

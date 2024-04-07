@@ -14,8 +14,19 @@ import {
 import { socket } from "../socket";
 import GroupComponent from "./GroupComponent";
 import { success } from "../Redux/slices/ErrorSlice";
+import Profile from "./ProfileDialog";
 
-export default function ChatList({ tab, setTab }) {
+export default function ChatList({ tab, setTab, dialog, chandleClose }) {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   //   const [friends, setFriends] = useState([]);
   let auth = useSelector((state) => state.auth.data);
   let opnedfor = useSelector((state) => state.friends.openedUser);
@@ -57,6 +68,11 @@ export default function ChatList({ tab, setTab }) {
   const data = async () => {
     await dispatch(getAllCommunication());
   };
+
+  function handleProfileDialog() {
+    handleClickOpen();
+  }
+
   useEffect(() => {
     data();
     // console.log("friends arr is ", friends);
@@ -64,31 +80,51 @@ export default function ChatList({ tab, setTab }) {
 
   return (
     <>
-      <div className="hidden lg:block w-4/12 bg-blue-400 p-4 overflow-y-auto">
-        <div className="flex items-center px-4 mb-5">
+      <Profile
+        open={open}
+        handleClickOpen={handleClickOpen}
+        handleClose={handleClose}
+      />
+      {/* hidden w-4/12 */}
+      <div
+        className={`lg:block  bg-blue-400 p-4 overflow-y-auto ${
+          dialog ? "" : "hidden w-4/12 "
+        }`}
+      >
+        <div className="flex items-center px-4 mb-5 justify-around">
+          <div>
+            <CgProfile
+              className="text-4xl mr-3 text-white"
+              onClick={handleProfileDialog}
+            />
+          </div>
           <Input
-            className="flex-1 px-4 py-2 rounded-full bg-blue-200 text-blue-700 border-0"
-            placeholder="Search"
+            className="flex-1 px-4 py-2 rounded bg-blue-200 text-blue-700  bg-blue-100"
+            placeholder="Search for friends"
           />
           <CiSearch className="text-2xl text-white font-extrabold ml-2" />
         </div>
-        <div className=" bg-blue-400 flex justify-around mb-2">
+        <div className="px-2 bg-blue-400 flex justify-around mb-2">
           <div
             onClick={() => {
               setTab(1);
               dispatch(removePage());
               dispatch(loading());
             }}
-            className={`rounded-full px-3 py-2  text-white font-bold cursor-pointer   w-[75%] text-center ${
-              tab == 1 ? "bg-black text" : "bg-blue-600 hover:bg-blue-500"
+            className={`rounded-full px-3 py-2  text-white font-bold cursor-pointer mr-3   text-center ${
+              tab == 1
+                ? "bg-black text w-[75%] border border-2 border-blue-100"
+                : "bg-blue-600 hover:bg-blue-500 "
             }`}
           >
             Chats
           </div>
           <div
             onClick={() => setTab(2)}
-            className={`rounded-full px-3 py-2   cursor-pointer text-white font-bold w-[75%] text-center ${
-              tab == 2 ? "bg-black text" : "bg-blue-600 hover:bg-blue-500"
+            className={`rounded-full px-3 py-2   cursor-pointer text-white font-bold   text-center ${
+              tab == 2
+                ? "bg-black text w-[75%] border border-2 border-blue-100"
+                : "bg-blue-600 hover:bg-blue-500 "
             }`}
           >
             Groups
@@ -101,13 +137,14 @@ export default function ChatList({ tab, setTab }) {
               <>
                 <div
                   className="space-y-2"
-                  onClick={() =>
+                  onClick={() => {
+                    dialog && chandleClose();
                     displayChats(
                       el.user1._id == JSON.parse(auth)._id
                         ? el.user2._id
                         : el.user1._id
-                    )
-                  }
+                    );
+                  }}
                   key={i}
                 >
                   <div
@@ -127,7 +164,8 @@ export default function ChatList({ tab, setTab }) {
                           : el.user1.userName}
                       </div>
                       <div className="text-sm text-gray-600 flex justify-between">
-                        {el.chats.msg[el.chats.msg.length - 1].message}{" "}
+                        {el.chats?.msg.length > 0 &&
+                          el.chats.msg[el.chats.msg.length - 1].message}{" "}
                         {unread ? (
                           <>
                             {" "}
@@ -141,7 +179,8 @@ export default function ChatList({ tab, setTab }) {
                       </div>
                     </div>
                     <div className="ml-auto text-sm text-gray-600"></div>
-                    {el.chats.msg[el.chats.msg.length - 1].time[3]}
+                    {el.chats?.msg.length > 0 &&
+                      el.chats.msg[el.chats.msg.length - 1].time[3]}
                   </div>
                 </div>
               </>

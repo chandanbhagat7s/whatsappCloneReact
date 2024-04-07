@@ -1,7 +1,7 @@
 import { Avatar, Input } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import { CiPhone, CiVideoOn } from "react-icons/ci";
+import { CiMenuBurger, CiPhone, CiVideoOn } from "react-icons/ci";
 import { FiSend } from "react-icons/fi";
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { MdOutlineScheduleSend } from "react-icons/md";
@@ -14,7 +14,7 @@ import {
 } from "../Redux/slices/RequestSlice";
 import { getAllMessagesGroup, setLoad } from "../Redux/slices/GroupSlice";
 
-export default function GroupDispaly() {
+export default function GroupDispaly({ chandleClose, chandleClickOpen }) {
   const [input, setInput] = useState("");
   const user = useSelector((state) => state.auth.data);
   const groupid = useSelector((state) => state.group.opnedGroup);
@@ -45,18 +45,26 @@ export default function GroupDispaly() {
     }
   };
   const getAllMessages = async () => {
+    console.log("COLLEXTING THE INFO", groupid);
     await dispatch(getAllMessagesGroup(groupid));
     // dispatch(setLoad());
   };
 
   useEffect(() => {
     getAllMessages();
-  }, [load]);
+    console.log("ALL MESSAGES ARE ", allMessages);
+  }, [groupid]);
   return (
     <>
       <div className="conatiner w-full lg:w-8/12 flex flex-col bg-blue-200 text-white">
         <div className="header">
           <div className="flex items-center justify-between mb-4 bg-black p-2 text-white rounded">
+            <div
+              className="cursor-pointer block lg:hidden bg-blue-300 p-2 rounded-full mx-3"
+              onClick={chandleClickOpen}
+            >
+              <CiMenuBurger className="text-black text-2xl rounded-full" />
+            </div>
             <div className="flex items-center">
               <Avatar>
                 <CgProfile />
@@ -72,7 +80,7 @@ export default function GroupDispaly() {
             </div>
           </div>
         </div>
-        <div className="main h-[90%]">
+        <div className="main h-[80%] overflow-scroll">
           <div
             className="flex-1 overflow-y-auto px-4 py-2"
             // style={{
@@ -90,16 +98,20 @@ export default function GroupDispaly() {
                         <Message
                           key={i}
                           data={el}
-                          background="bg-black text-white"
+                          background="bg-blue-300 text-black"
                           group={true}
                         >
-                          <>
-                            {el.msg}
-
-                            <span className="text-blue-200 ml-3">
-                              {el.time[3]}
-                            </span>
-                          </>
+                          <div className="flex flex-col">
+                            <div className="text-black font-bold  pb-2">
+                              {el.senderName}
+                            </div>
+                            <div className="text-black">
+                              {el.msg}{" "}
+                              <span className="text-blue-900 ml-3">
+                                {el.time[3]}
+                              </span>
+                            </div>
+                          </div>
                         </Message>
                       );
                     } else {

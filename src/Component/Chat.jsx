@@ -16,6 +16,7 @@ import { loading } from "../Redux/slices/RequestSlice";
 import GroupDispaly from "./GroupDispaly";
 import { success } from "../Redux/slices/ErrorSlice";
 import { socket } from "../socket";
+import ChatDialog from "./ChatDialog";
 
 export default function Chat() {
   let opnedBy = useSelector((state) => state.friends.openedUser);
@@ -28,47 +29,67 @@ export default function Chat() {
   let addGroupPage = useSelector((state) => state.friends.addGroupPage);
   let opnedGroup = useSelector((state) => state.group.opnedGroup);
 
+  console.log("ID OPNED", opnedGroup);
+
+  const [copen, csetOpen] = useState(false);
+
+  const chandleClickOpen = () => {
+    csetOpen(true);
+  };
+  const chandleClose = () => {
+    csetOpen(false);
+  };
   let auth = useSelector((state) => state.auth.data);
 
   useEffect(() => {}, [load, groupLoading]);
 
   return (
-    <div
-      className="min-h-screen w-[100vw]  m-auto bg-gray-100  md:p-2 flex justify-center items-start"
-      // style={{ marginTop: "-8vh" }}
-    >
-      <div className="bg-white rounded-lg h-[85vh] shadow-lg overflow-hidden flex w-full max-w-6xl">
-        <ChatList tab={tab} setTab={setTab} />
-        {}
-        {open && !addGroupPage ? (
-          <Chatting />
-        ) : addGroupPage || opnedGroup ? (
-          opnedGroup ? (
-            <GroupDispaly />
-          ) : (
-            <AddGroupForm />
-          )
-        ) : (
-          <>
-            <div className="w-full lg:w-8/12 flex flex-col bg-blue-200 text-white p-3">
-              <div className="h-[90%] m-auto ">
-                <div className="p-2 text-center text-2xl text-blue-400 font-bold capitalize">
-                  Select Your Friend to
-                </div>
-                <div className="p-2 text-center text-3xl text-blue-800 font-bold capitalize">
-                  communicate
-                </div>
+    <>
+      <ChatDialog
+        handleClickOpen={chandleClickOpen}
+        handleClose={chandleClose}
+        open={copen}
+        tab={tab}
+        setTab={setTab}
+      />
 
-                <img
-                  src="https://cdn-icons-png.freepik.com/512/186/186044.png"
-                  alt=""
-                  className="h-[90%] rounded"
-                />
+      <div
+        className="min-h-screen w-[100vw]  m-auto bg-gray-100  md:p-2 flex justify-center items-start"
+        // style={{ marginTop: "-8vh" }}
+      >
+        <div className="bg-white rounded-lg h-[87vh] shadow-lg overflow-hidden flex w-full max-w-6xl">
+          <ChatList tab={tab} setTab={setTab} />
+          {}
+          {open && !addGroupPage ? (
+            <Chatting chandleClickOpen={chandleClickOpen} />
+          ) : addGroupPage || opnedGroup ? (
+            opnedGroup ? (
+              <GroupDispaly chandleClickOpen={chandleClickOpen} />
+            ) : (
+              <AddGroupForm />
+            )
+          ) : (
+            <>
+              <div className="w-full lg:w-8/12 flex flex-col bg-blue-200 text-white p-3">
+                <div className="h-[90%] m-auto ">
+                  <div className="p-2 text-center text-2xl text-blue-400 font-bold capitalize">
+                    Select Your Friend to
+                  </div>
+                  <div className="p-2 text-center text-3xl text-blue-800 font-bold capitalize">
+                    communicate
+                  </div>
+
+                  <img
+                    src="https://cdn-icons-png.freepik.com/512/186/186044.png"
+                    alt=""
+                    className="h-[90%] rounded"
+                  />
+                </div>
               </div>
-            </div>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
